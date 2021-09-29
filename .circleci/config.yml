@@ -24,6 +24,8 @@ workflows:
           context: mattermost
           message: >-
             Hello @all! A workflow on https://app.circleci.com/pipelines/github/psyplot/ci-release-test is awaiting your approval to test the release workflow.
+          requires:
+            - install
       - hold-for-deploy:
           type: approval
           requires:
@@ -34,12 +36,12 @@ workflows:
             branches:
               only: main
           requires:
-            - notify-deploy
+            - hold-for-deploy
   publish-release:
     when: << pipeline.parameters.deploy-release >>
     jobs:
       - psyplot/create-tag:
-          ssh-fingerprints: "fc:e3:0f:d0:c6:5a:6a:a5:0e:7c:d6:47:37:48:dd:67"
+          ssh-fingerprints: "ce:36:ab:f2:af:01:66:49:6e:16:39:ef:20:46:ba:ee"
           context: psyplot-admin
           user-name: psyplot-admin
           publish-release: true
