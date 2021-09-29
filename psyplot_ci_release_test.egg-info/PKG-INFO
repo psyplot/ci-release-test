@@ -1,0 +1,19 @@
+Metadata-Version: 1.2
+Name: psyplot-ci-release-test
+Version: 0.0.1+0.g75dfb65.dirty
+Summary: A test repository for the psyplot release workflow
+Home-page: https://github.com/psyplot/ci-release-test
+Author: Phiilpp S. Sommer
+Author-email: philipp.sommer@hereon.de
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Requires-Python: >=3.7

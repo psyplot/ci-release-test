@@ -1,0 +1,65 @@
+version: 2.1
+
+orbs:
+  psyplot: psyplot/psyplot-ci-orb@dev:alpha
+  mattermost-plugin-notify: nathanaelhoun/mattermost-plugin-notify@1.2.0
+
+parameters:
+  deploy-release:
+    description: Deploy the comment as a new release to github and pypi
+    type: boolean
+    default: false
+
+workflows:
+  build-and-test:
+    unless: << pipeline.parameters.deploy-release >>
+    jobs:
+      - psyplot/install-and-build:
+          name: install
+          setup_env: false
+          build_recipe: false
+          build_docs: false
+      - mattermost-plugin-notify/approval-notification:
+          name: notify-deploy
+          context: mattermost
+          message: >-
+            Hello @all! A workflow on https://app.circleci.com/pipelines/github/psyplot/ci-release-test is awaiting your approval to test the release workflow.
+      - hold-for-deploy:
+          type: approval
+          requires:
+            - notify-deploy
+      - psyplot/trigger-release-workflow:
+          context: trigger-release
+          filters:
+            branches:
+              only: main
+          requires:
+            - notify-deploy
+  publish-release:
+    when: << pipeline.parameters.deploy-release >>
+    jobs:
+      - psyplot/create-tag:
+          ssh-fingerprints: "fc:e3:0f:d0:c6:5a:6a:a5:0e:7c:d6:47:37:48:dd:67"
+          context: psyplot-admin
+          user-name: psyplot-admin
+          publish-release: true
+          publish-version-tag: true
+      - mattermost-plugin-notify/approval-notification:
+          name: notify-release
+          context: mattermost
+          message: >-
+            Hello @all! A new release has been created at https://github.com/psyplot/ci-release-test/releases.
+            Please review it carefully.
+          requires:
+            - psyplot/create-tag
+      - hold-for-pypi:
+          type: approval
+          requires:
+            - notify-release
+      - psyplot/deploy-pypi:
+          dry_run: true
+          requires:
+            - hold-for-pypi
+          filters:
+            branches:
+              only: main
