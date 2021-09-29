@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Philipp S.
+    given-names: Sommer
+title: "psyplot/ci-release-test: A test repository for the psyplot ci release workflow"
+date-released: 2017-12-18
