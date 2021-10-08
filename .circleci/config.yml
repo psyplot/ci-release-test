@@ -14,18 +14,11 @@ workflows:
   build-and-test:
     unless: << pipeline.parameters.deploy-release >>
     jobs:
-      - psyplot/install-and-build:
-          name: install
-          setup_env: false
-          build_recipe: false
-          build_docs: false
       - mattermost-plugin-notify/approval-notification:
           name: notify-deploy
           context: mattermost
           message: >-
             Hello @all! A workflow on https://app.circleci.com/pipelines/github/psyplot/ci-release-test is awaiting your approval to test the release workflow.
-          requires:
-            - install
       - hold-for-deploy:
           type: approval
           requires:
